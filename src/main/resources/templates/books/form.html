@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<body>
+<div layout:fragment="content">
+    <div class="d-flex align-items-center gap-2 mb-4">
+        <a th:href="@{/books/list}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
+        <h4 class="fw-bold mb-0" th:text="${book.id != null} ? 'Edit Book' : 'Add Book'"></h4>
+    </div>
+
+    <div class="card p-4" style="max-width:520px">
+        <form th:action="${book.id != null} ? @{/books/edit/{id}(id=${book.id})} : @{/books/add}"
+              th:object="${book}" method="post">
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Title</label>
+                <input type="text" th:field="*{title}" class="form-control"
+                       th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'"/>
+                <div class="invalid-feedback" th:errors="*{title}"></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">ISBN</label>
+                <input type="text" th:field="*{isbn}" class="form-control" placeholder="e.g. 978-3-16-148410-0"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Genre</label>
+                <input type="text" th:field="*{genre}" class="form-control" placeholder="e.g. Fiction"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Author</label>
+                <select th:field="*{author.id}" class="form-select">
+                    <option value="">-- Select Author --</option>
+                    <option th:each="a : ${authors}"
+                            th:value="${a.id}"
+                            th:text="${a.firstName + ' ' + a.lastName}"></option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Total Copies</label>
+                <input type="number" th:field="*{totalCopies}" class="form-control" min="1"
+                       th:classappend="${#fields.hasErrors('totalCopies')} ? 'is-invalid'"/>
+                <div class="invalid-feedback" th:errors="*{totalCopies}"></div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100"
+                    th:text="${book.id != null} ? 'Update Book' : 'Save Book'"></button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

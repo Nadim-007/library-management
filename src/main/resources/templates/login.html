@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Login — LibraryMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+    <style>
+        body { background: #f1f5f9; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .login-card { background: white; border-radius: 16px; padding: 40px; width: 100%; max-width: 400px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+        .login-icon { width: 56px; height: 56px; background: #1e293b; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+        .btn-login { background: #1e293b; color: white; border: none; }
+        .btn-login:hover { background: #334155; color: white; }
+        .cred-hint { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; font-size: 0.82rem; color: #64748b; }
+    </style>
+</head>
+<body>
+<div class="login-card">
+    <div class="login-icon">
+        <i class="bi bi-book-half text-white fs-4"></i>
+    </div>
+    <h5 class="text-center fw-bold mb-1">LibraryMS</h5>
+    <p class="text-center text-muted small mb-4">Sign in to continue</p>
+
+    <!-- Error Message -->
+    <div th:if="${param.error}" class="alert alert-danger py-2 small">
+        <i class="bi bi-exclamation-circle me-1"></i> Invalid username or password.
+    </div>
+
+    <!-- Logout Message -->
+    <div th:if="${param.logout}" class="alert alert-success py-2 small">
+        <i class="bi bi-check-circle me-1"></i> You have been logged out.
+    </div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="mb-3">
+            <label class="form-label fw-semibold small">Username</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                <input type="text" name="username" class="form-control"
+                       placeholder="Enter username" required autofocus/>
+            </div>
+        </div>
+        <div class="mb-4">
+            <label class="form-label fw-semibold small">Password</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input type="password" name="password" class="form-control"
+                       placeholder="Enter password" required/>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-login w-100 py-2 fw-semibold">
+            Sign In
+        </button>
+    </form>
+
+    <!-- Dev credentials hint -->
+    <div class="cred-hint mt-4">
+        <div class="fw-semibold mb-1">Default credentials</div>
+        <div><i class="bi bi-shield-fill-check text-danger me-1"></i><strong>Admin:</strong> admin / admin123</div>
+        <div><i class="bi bi-person-fill text-primary me-1"></i><strong>User:</strong> user / user123</div>
+    </div>
+</div>
+</body>
+</html>

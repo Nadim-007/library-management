@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">Borrow Records
+            <small th:if="${member}" class="text-muted fs-6"
+                   th:text="'— ' + ${member.fullName}"></small>
+        </h4>
+        <a th:href="@{/borrow/new}" sec:authorize="hasRole('ADMIN')" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg me-1"></i> Issue Book
+        </a>
+    </div>
+
+    <div class="card">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr><th>#</th><th>Member</th><th>Book</th><th>Borrow Date</th><th>Due Date</th><th>Return Date</th><th>Status</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+                <tr th:each="b, stat : ${borrows}">
+                    <td th:text="${stat.count}"></td>
+                    <td th:text="${b.member.fullName}"></td>
+                    <td th:text="${b.book.title}"></td>
+                    <td th:text="${b.borrowDate}"></td>
+                    <td th:text="${b.dueDate}"></td>
+                    <td th:text="${b.returnDate ?: '—'}"></td>
+                    <td>
+                        <span class="badge rounded-pill"
+                              th:classappend="'badge-' + ${#strings.toLowerCase(b.status)}"
+                              th:text="${b.status}"></span>
+                    </td>
+                    <td>
+                        <form th:if="${b.status.name() == 'BORROWED'}"
+      sec:authorize="hasRole('ADMIN')"
+      th:action="@{/borrow/return/{id}(id=${b.id})}" method="post">
+                            <button type="submit" class="btn btn-sm btn-success"
+                                    onclick="return confirm('Mark as returned?')">
+                                <i class="bi bi-check-lg"></i> Return
+                            </button>
+                        </form>
+                        <span th:if="${b.status.name() != 'BORROWED'}" class="text-muted small">—</span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(borrows)}">
+                    <td colspan="8" class="text-center text-muted py-4">No records found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

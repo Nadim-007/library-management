@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<body>
+<div layout:fragment="content">
+    <div class="d-flex align-items-center gap-2 mb-4">
+        <a th:href="@{/members/list}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
+        <h4 class="fw-bold mb-0" th:text="${member.id != null} ? 'Edit Member' : 'Register Member'"></h4>
+    </div>
+
+    <div class="card p-4" style="max-width:500px">
+        <form th:action="${member.id != null} ? @{/members/edit/{id}(id=${member.id})} : @{/members/add}"
+              th:object="${member}" method="post">
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Full Name</label>
+                <input type="text" th:field="*{fullName}" class="form-control"
+                       th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'"/>
+                <div class="invalid-feedback" th:errors="*{fullName}"></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Email</label>
+                <input type="email" th:field="*{email}" class="form-control"
+                       th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"/>
+                <div class="invalid-feedback" th:errors="*{email}"></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Phone</label>
+                <input type="text" th:field="*{phone}" class="form-control" placeholder="e.g. 9876543210"/>
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Membership Status</label>
+                <select th:field="*{membershipStatus}" class="form-select">
+                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100"
+                    th:text="${member.id != null} ? 'Update Member' : 'Register Member'"></button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

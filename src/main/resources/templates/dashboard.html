@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head><title>Dashboard</title></head>
+<body>
+<div layout:fragment="content">
+    <th:block th:with="activeMenu='dashboard'"></th:block>
+
+    <h4 class="mb-4 fw-bold">Dashboard</h4>
+
+    <!-- Stat Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card p-3" style="border-color:#6366f1">
+                <div class="text-muted small">Total Books</div>
+                <div class="fs-3 fw-bold" th:text="${totalBooks}">0</div>
+                <i class="bi bi-journal-bookmark text-primary"></i>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card p-3" style="border-color:#22c55e">
+                <div class="text-muted small">Total Members</div>
+                <div class="fs-3 fw-bold" th:text="${totalMembers}">0</div>
+                <i class="bi bi-people text-success"></i>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card p-3" style="border-color:#3b82f6">
+                <div class="text-muted small">Total Borrows</div>
+                <div class="fs-3 fw-bold" th:text="${totalBorrows}">0</div>
+                <i class="bi bi-arrow-left-right text-info"></i>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card p-3" style="border-color:#ef4444">
+                <div class="text-muted small">Overdue</div>
+                <div class="fs-3 fw-bold text-danger" th:text="${overdueCount}">0</div>
+                <i class="bi bi-exclamation-triangle text-danger"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Borrows -->
+    <div class="card p-4">
+        <h6 class="fw-bold mb-3">Recent Borrow Activity</h6>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Member</th><th>Book</th><th>Borrow Date</th><th>Due Date</th><th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="b : ${recentBorrows}">
+                    <td th:text="${b.member.fullName}"></td>
+                    <td th:text="${b.book.title}"></td>
+                    <td th:text="${b.borrowDate}"></td>
+                    <td th:text="${b.dueDate}"></td>
+                    <td>
+                        <span class="badge rounded-pill"
+                              th:classappend="'badge-' + ${#strings.toLowerCase(b.status)}"
+                              th:text="${b.status}"></span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(recentBorrows)}">
+                    <td colspan="5" class="text-center text-muted">No borrow records yet.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">Members</h4>
+        <a th:href="@{/members/add}" sec:authorize="hasRole('ADMIN')" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg me-1"></i> Add Member
+        </a>
+    </div>
+
+    <form th:action="@{/members/search}" method="get" class="d-flex gap-2 mb-3">
+        <input type="text" name="keyword" class="form-control form-control-sm w-auto"
+               placeholder="Search by name..." th:value="${keyword}"/>
+        <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-search"></i> Search</button>
+        <a th:href="@{/members/list}" class="btn btn-outline-secondary btn-sm">Clear</a>
+    </form>
+
+    <div class="card">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr><th>#</th><th>Full Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                <tr th:each="member, stat : ${members}">
+                    <td th:text="${stat.count}"></td>
+                    <td th:text="${member.fullName}"></td>
+                    <td th:text="${member.email}"></td>
+                    <td th:text="${member.phone ?: '-'}"></td>
+                    <td>
+                        <span class="badge rounded-pill"
+                              th:classappend="'badge-' + ${#strings.toLowerCase(member.membershipStatus)}"
+                              th:text="${member.membershipStatus}"></span>
+                    </td>
+                    <td>
+                        <a th:href="@{/borrow/member/{id}(id=${member.id})}" class="btn btn-sm btn-outline-info me-1" title="View Borrows">
+                            <i class="bi bi-arrow-left-right"></i>
+                        </a>
+                        <a th:href="@{/members/edit/{id}(id=${member.id})}" sec:authorize="hasRole('ADMIN')" class="btn btn-sm btn-outline-primary me-1">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a th:href="@{/members/delete/{id}(id=${member.id})}" sec:authorize="hasRole('ADMIN')" class="btn btn-sm btn-outline-danger"
+                           onclick="return confirm('Remove this member?')">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(members)}">
+                    <td colspan="6" class="text-center text-muted py-4">No members found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

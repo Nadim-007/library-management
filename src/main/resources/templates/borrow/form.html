@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<body>
+<div layout:fragment="content">
+    <div class="d-flex align-items-center gap-2 mb-4">
+        <a th:href="@{/borrow/list}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
+        <h4 class="fw-bold mb-0">Issue Book to Member</h4>
+    </div>
+
+    <div class="card p-4" style="max-width:500px">
+        <form th:action="@{/borrow/new}" method="post">
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Select Member</label>
+                <select name="memberId" class="form-select" required>
+                    <option value="">-- Choose Member --</option>
+                    <option th:each="m : ${members}"
+                            th:value="${m.id}"
+                            th:text="${m.fullName + ' (' + m.email + ')'}"></option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Select Book</label>
+                <select name="bookId" class="form-select" required>
+                    <option value="">-- Choose Available Book --</option>
+                    <option th:each="b : ${books}"
+                            th:value="${b.id}"
+                            th:text="${b.title + ' — ' + b.author.firstName + ' ' + b.author.lastName + ' (' + b.availableCopies + ' available)'}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-arrow-left-right me-1"></i> Issue Book (14-day loan)
+            </button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
